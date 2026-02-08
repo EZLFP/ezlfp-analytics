@@ -123,6 +123,17 @@ export async function getDailyMetrics(
 }
 
 /**
+ * Fetch guild/server statistics
+ * Cache: 120 seconds
+ */
+export async function getGuilds(): Promise<T.GuildsResponse> {
+  return fetchWithCache<T.GuildsResponse>(
+    `${API_URL}/api/analytics/guilds`,
+    120
+  );
+}
+
+/**
  * Client-side fetch for polling (without caching)
  * Used in client components that need real-time data
  */

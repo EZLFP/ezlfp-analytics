@@ -8,7 +8,8 @@ import { TrendsCharts } from "@/components/dashboard/trends-charts";
 import { CommandsTable } from "@/components/dashboard/commands-table";
 import { EventsFeed } from "@/components/dashboard/events-feed";
 import { UserAnalytics } from "@/components/dashboard/user-analytics";
-import { getQueues, getCommands } from "@/lib/analytics";
+import { GuildsTable } from "@/components/dashboard/guilds-table";
+import { getQueues, getCommands, getGuilds } from "@/lib/analytics";
 import { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -33,8 +34,11 @@ export default async function DashboardPage() {
   }
 
   // Fetch data for client components
-  const queuesData = await getQueues(1);
-  const commandsData = await getCommands(30, 20);
+  const [queuesData, commandsData, guildsData] = await Promise.all([
+    getQueues(1),
+    getCommands(30, 20),
+    getGuilds(),
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,6 +82,12 @@ export default async function DashboardPage() {
             commands={commandsData.commands}
             period={commandsData.period}
           />
+        </section>
+
+        {/* Guild/Server Analytics */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Server Analytics</h2>
+          <GuildsTable data={guildsData} />
         </section>
 
         {/* Two Column Layout for Events and Users */}

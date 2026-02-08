@@ -116,3 +116,24 @@ export interface DailyMetricsResponse {
   dailyMetrics: DailyMetric[];
   period: string;
 }
+
+export interface BotGuild {
+  id: string;
+  name: string;
+  memberCount: number;
+  iconHash: string | null;
+  ownerId: string | null;
+  isActive: boolean;
+  joinedAt: string;
+  leftAt: string | null;
+  updatedAt: string;
+}
+
+export interface GuildsResponse {
+  guilds: BotGuild[];
+  summary: {
+    total: number;
+    active: number;
+    totalMembers: number;
+  };
+}
