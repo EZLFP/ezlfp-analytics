@@ -8,6 +8,7 @@ const links = [
   { href: "/", label: "Overview" },
   { href: "/queue", label: "Queue" },
   { href: "/matching-quality", label: "Matching Quality" },
+  { href: "/funnel", label: "Funnel" },
 ];
 
 export function NavLinks() {

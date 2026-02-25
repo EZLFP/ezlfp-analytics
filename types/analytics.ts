@@ -200,6 +200,64 @@ export interface MatchingQualityResponse {
   period: string;
 }
 
+// Funnel Analytics types
+
+export interface FunnelStepStats {
+  step_number: number;
+  step_name: string;
+  sessions_reached: number;
+  sessions_completed: number;
+  drop_off_count: number;
+  drop_off_rate: number;
+  avg_time_seconds: number;
+}
+
+export interface FunnelFieldInteraction {
+  step_number: number;
+  field_name: string;
+  interaction_count: number;
+  unique_sessions: number;
+}
+
+export interface FunnelValidationFailure {
+  step_number: number;
+  field_name: string;
+  failure_count: number;
+  unique_sessions: number;
+}
+
+export interface FunnelRecentSession {
+  session_id: string;
+  discord_id: string | null;
+  started_at: string;
+  last_activity_at: string;
+  max_step_reached: number;
+  completed: boolean;
+  event_count: number;
+  duration_seconds: number;
+}
+
+export interface FunnelDailyCount {
+  date: string;
+  started: number;
+  completed: number;
+}
+
+export interface FunnelStatsResponse {
+  period: string;
+  overview: {
+    total_sessions: number;
+    completed_sessions: number;
+    conversion_rate: number;
+    abandoned_sessions: number;
+  };
+  steps: FunnelStepStats[];
+  field_interactions: FunnelFieldInteraction[];
+  validation_failures: FunnelValidationFailure[];
+  recent_sessions: FunnelRecentSession[];
+  daily_sessions: FunnelDailyCount[];
+}
+
 export interface BotGuild {
   id: string;
   name: string;

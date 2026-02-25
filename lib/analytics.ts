@@ -3,6 +3,9 @@ import type * as T from "@/types/analytics";
 const API_URL =
   process.env.NEXT_PUBLIC_BOT_API_URL || "http://localhost:3000";
 
+const WEB_API_URL =
+  process.env.NEXT_PUBLIC_WEB_API_URL || "http://localhost:8000";
+
 /**
  * Fetch wrapper with caching for server components
  * Uses Next.js ISR (Incremental Static Regeneration) caching
@@ -181,6 +184,19 @@ export async function getMatchingQuality(
 ): Promise<T.MatchingQualityResponse> {
   return fetchWithCache<T.MatchingQualityResponse>(
     `${API_URL}/api/analytics/matching-quality?days=${days}`,
+    120
+  );
+}
+
+/**
+ * Fetch funnel analytics stats from the web backend
+ * Cache: 120 seconds
+ */
+export async function getFunnelStats(
+  days: number = 30
+): Promise<T.FunnelStatsResponse> {
+  return fetchWithCache<T.FunnelStatsResponse>(
+    `${WEB_API_URL}/funnel/stats?days=${days}`,
     120
   );
 }
