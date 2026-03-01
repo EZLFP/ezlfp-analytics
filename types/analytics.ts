@@ -278,3 +278,21 @@ export interface GuildsResponse {
     totalMembers: number;
   };
 }
+
+export interface Affiliate {
+  id: string;
+  code: string;
+  name: string;
+  platform: string | null;
+  notes: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deactivatedAt: string | null;
+  totalSignups: number;
+  last30DaysSignups: number;
+}
+
+export interface AffiliatesResponse {
+  affiliates: Affiliate[];
+}

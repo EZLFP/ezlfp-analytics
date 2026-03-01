@@ -202,6 +202,61 @@ export async function getFunnelStats(
 }
 
 /**
+ * Fetch affiliates with signup counts
+ * Cache: 60 seconds
+ */
+export async function getAffiliates(): Promise<T.AffiliatesResponse> {
+  return fetchWithCache<T.AffiliatesResponse>(
+    `${API_URL}/api/analytics/affiliates`,
+    60
+  );
+}
+
+/**
+ * Client-side: Create a new affiliate (no cache)
+ */
+export async function createAffiliate(data: {
+  code: string;
+  name: string;
+  platform?: string;
+  notes?: string;
+}): Promise<T.Affiliate> {
+  const res = await fetch(`${API_URL}/api/analytics/affiliates`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    throw new Error(error.error || "Failed to create affiliate");
+  }
+
+  return res.json();
+}
+
+/**
+ * Client-side: Update an affiliate (no cache)
+ */
+export async function updateAffiliate(
+  id: string,
+  data: { isActive?: boolean; name?: string; platform?: string; notes?: string }
+): Promise<T.Affiliate> {
+  const res = await fetch(`${API_URL}/api/analytics/affiliates/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    throw new Error(error.error || "Failed to update affiliate");
+  }
+
+  return res.json();
+}
+
+/**
  * Client-side fetch for live queue players (no cache)
  */
 export async function fetchLiveQueuePlayers(): Promise<T.QueuePlayersResponse> {
