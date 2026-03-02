@@ -10,6 +10,7 @@ import { FunnelTimeChart } from "@/components/dashboard/funnel-time-chart";
 import { FunnelDailyChart } from "@/components/dashboard/funnel-daily-chart";
 import { FunnelFieldTables } from "@/components/dashboard/funnel-field-tables";
 import { FunnelSessionsTable } from "@/components/dashboard/funnel-sessions-table";
+import { AlertCircle } from "lucide-react";
 
 export default async function FunnelPage() {
   const session = await auth();
@@ -18,7 +19,47 @@ export default async function FunnelPage() {
     redirect("/auth/signin");
   }
 
-  const data = await getFunnelStats(30);
+  let data;
+  let error: string | null = null;
+
+  try {
+    data = await getFunnelStats(30);
+    // API returned an error object instead of valid data
+    if (!data?.overview) {
+      error =
+        (data as unknown as Record<string, unknown>)?.error?.toString() ||
+        "No funnel data available. The funnel_events table may not exist yet.";
+      data = null;
+    }
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Failed to fetch funnel data";
+    data = null;
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="container py-8 space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold">Funnel Analytics</h1>
+            <p className="text-muted-foreground mt-1">
+              Compatibility report wizard conversion tracking
+            </p>
+          </div>
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+              <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
+              <h2 className="text-xl font-semibold mb-2">Unable to load funnel data</h2>
+              <p className="text-muted-foreground max-w-md">
+                {error || "No data available"}
+              </p>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
