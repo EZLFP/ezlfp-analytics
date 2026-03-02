@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Affiliate } from "@/types/analytics";
 import { cn } from "@/lib/utils";
 import { updateAffiliate } from "@/lib/analytics";
+import { revalidateAffiliates } from "@/app/affiliates/actions";
 import { format, formatDistanceToNow } from "date-fns";
 
 interface AffiliatesTableProps {
@@ -12,14 +12,13 @@ interface AffiliatesTableProps {
 }
 
 export function AffiliatesTable({ affiliates }: AffiliatesTableProps) {
-  const router = useRouter();
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const handleToggleActive = async (affiliate: Affiliate) => {
     setLoadingId(affiliate.id);
     try {
       await updateAffiliate(affiliate.id, { isActive: !affiliate.isActive });
-      router.refresh();
+      await revalidateAffiliates();
     } catch (error) {
       console.error("Failed to toggle affiliate:", error);
     } finally {

@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createAffiliate } from "@/lib/analytics";
+import { revalidateAffiliates } from "@/app/affiliates/actions";
 
 export function CreateAffiliateForm() {
-  const router = useRouter();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [platform, setPlatform] = useState("");
@@ -34,7 +33,7 @@ export function CreateAffiliateForm() {
       setName("");
       setPlatform("");
       setNotes("");
-      router.refresh();
+      await revalidateAffiliates();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create affiliate");
     } finally {

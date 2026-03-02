@@ -13,7 +13,12 @@ export default async function AffiliatesPage() {
     redirect("/auth/signin");
   }
 
-  const data = await getAffiliates();
+  let data;
+  try {
+    data = await getAffiliates();
+  } catch {
+    data = { affiliates: [] };
+  }
 
   const activeCount = data.affiliates.filter((a) => a.isActive).length;
   const totalSignups = data.affiliates.reduce(
