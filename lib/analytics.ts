@@ -213,6 +213,25 @@ export async function getAffiliates(): Promise<T.AffiliatesResponse> {
 }
 
 /**
+ * Client-side: Fetch users referred by a specific affiliate code (no cache)
+ */
+export async function getAffiliateUsers(
+  code: string
+): Promise<T.AffiliateUsersResponse> {
+  const res = await fetch(
+    `${API_URL}/api/analytics/affiliates/${encodeURIComponent(code)}/users`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    throw new Error(error.error || "Failed to fetch affiliate users");
+  }
+
+  return res.json();
+}
+
+/**
  * Client-side: Create a new affiliate (no cache)
  */
 export async function createAffiliate(data: {

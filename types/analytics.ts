@@ -296,3 +296,20 @@ export interface Affiliate {
 export interface AffiliatesResponse {
   affiliates: Affiliate[];
 }
+
+export interface AffiliateUser {
+  id: string;
+  discordUsername: string;
+  discordDisplayName: string | null;
+  riotId: string;
+  lolTier: string;
+  lolDivision: number;
+  valorantTier: string | null;
+  referredAt: string | null;
+  createdAt: string;
+}
+
+export interface AffiliateUsersResponse {
+  code: string;
+  users: AffiliateUser[];
+}
