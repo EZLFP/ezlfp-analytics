@@ -62,6 +62,13 @@ export function AffiliatesTable({ affiliates }: AffiliatesTableProps) {
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
   const [usersMap, setUsersMap] = useState<Record<string, AffiliateUser[]>>({});
   const [loadingUsers, setLoadingUsers] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyUrl = async (code: string) => {
+    await navigator.clipboard.writeText(`https://ezlfp.com/r/${code}`);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   const handleToggleActive = async (affiliate: Affiliate) => {
     setLoadingId(affiliate.id);
@@ -178,23 +185,31 @@ export function AffiliatesTable({ affiliates }: AffiliatesTableProps) {
                   })}
                 </td>
                 <td className="p-3 text-center">
-                  <button
-                    onClick={() => handleToggleActive(affiliate)}
-                    disabled={loadingId === affiliate.id}
-                    className={cn(
-                      "rounded px-3 py-1 text-xs font-medium transition-colors",
-                      affiliate.isActive
-                        ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
-                        : "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50",
-                      loadingId === affiliate.id && "opacity-50 cursor-not-allowed"
-                    )}
-                  >
-                    {loadingId === affiliate.id
-                      ? "..."
-                      : affiliate.isActive
-                        ? "Deactivate"
-                        : "Activate"}
-                  </button>
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => handleCopyUrl(affiliate.code)}
+                      className="rounded px-3 py-1 text-xs font-medium transition-colors bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+                    >
+                      {copiedCode === affiliate.code ? "Copied!" : "Copy URL"}
+                    </button>
+                    <button
+                      onClick={() => handleToggleActive(affiliate)}
+                      disabled={loadingId === affiliate.id}
+                      className={cn(
+                        "rounded px-3 py-1 text-xs font-medium transition-colors",
+                        affiliate.isActive
+                          ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                          : "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50",
+                        loadingId === affiliate.id && "opacity-50 cursor-not-allowed"
+                      )}
+                    >
+                      {loadingId === affiliate.id
+                        ? "..."
+                        : affiliate.isActive
+                          ? "Deactivate"
+                          : "Activate"}
+                    </button>
+                  </div>
                 </td>
               </tr>
               {expandedCode === affiliate.code && (
